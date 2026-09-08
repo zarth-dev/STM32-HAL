@@ -12,13 +12,14 @@ int main(void)
 
   SystemClock_Config();
 
-  MX_GPIO_Init();
-  MX_TIM2_Init();
+  MX_GPIO_Init(); // GPIO initialization
+  MX_TIM2_Init(); // TIM2 general purpose timer initialization
 
-  __HAL_RCC_GPIOB_CLK_ENABLE();
+  __HAL_RCC_GPIOB_CLK_ENABLE(); // enable the clock on GPIO port B
 
-  HAL_TIM_Base_Start_IT(&htim2);
+  HAL_TIM_Base_Start_IT(&htim2); // TIM2 begins counting
 
+  // setting PB2 as output 
   GPIO_InitTypeDef GPIO_InitStruct = {0};
 
   GPIO_InitStruct.Pin = GPIO_PIN_2;
@@ -113,10 +114,11 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 }
 
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)  // callback function that HAL executes when a timer update interrupt occurs
 {
   if (htim->Instance == TIM2)
   {
+    //  it tells that when timer has done counting, toggle the pin, which recreates the blink effect.
     HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_2);
   }
 }
